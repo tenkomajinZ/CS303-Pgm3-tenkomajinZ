@@ -1,0 +1,15 @@
+CS303 Program 3 - Additional Test Case
+
+Test: Invalid menu choice
+
+Starting state: Select input file 1 so the list contains values 1 through 100.
+Actions:
+1. Enter X at the menu prompt.
+2. Select P to print the list.
+
+Expected results:
+- The program asks the user to choose one of the listed menu options.
+- The menu is displayed again.
+- Printing shows the original values 1 through 100, unchanged.
+
+This checks that an unsupported menu choice does not change or terminate the list.

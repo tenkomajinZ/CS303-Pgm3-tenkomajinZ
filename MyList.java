@@ -34,7 +34,6 @@ public interface MyList<E> extends java.util.Collection<E> {
     //PRE: accepts the element to remove
     //POST:adds element to the end of the array  
     public default boolean add(E e){
-        System.out.println("adding: " + e);
         add(size(), e);
         return true;
     }
@@ -42,14 +41,24 @@ public interface MyList<E> extends java.util.Collection<E> {
     @Override       
     //Default method:  Copy all elements in 'c' to the list
     public default boolean addAll(Collection<? extends E> c){
-      // Left as an exercise in MyArrayList Class
-      return false;
+      boolean changed = false;
+      Object[] items = c.toArray();
+      for (Object item : items) {
+        E element = (E) item;
+        add(element);
+        changed = true;
+      }
+      return changed;
     }
 
     //Default Method: Returns false
     public default boolean containsAll(Collection<?> c){
-      // Left as an exercise in MyArrayList Class
-      return false;
+      for (Object item : c) {
+        if (!contains(item)) {
+          return false;
+        }
+      }
+      return true;
     } 
     
     @Override 
@@ -76,28 +85,56 @@ public interface MyList<E> extends java.util.Collection<E> {
     @Override
     //Default Method: Removes all the elements in c from this collection.
     public default boolean removeAll(Collection<?> c) {
-      // Left as an exercise in MyArrayList Class
-      return false;
+      boolean changed = false;
+      Object[] items = c.toArray();
+      for (Object item : items) {
+        while (remove(item)) {
+          changed = true;
+        }
+      }
+      return changed;
     } 
     
     @Override
     //Retains the elements that are both in c and in this collection.
     public default boolean retainAll(Collection<?> c) {
-        // not implementing at this time
-        return false;
+        boolean changed = false;
+        for (int i = size() - 1; i >= 0; i--) {
+          if (!c.contains(get(i))) {
+            remove(i);
+            changed = true;
+          }
+        }
+        return changed;
     }
     
     @Override
     //Default Method: returns null  
     public default Object[] toArray() {
-        // Left as an exercise in MyArrayList Class
-        return null;
+        Object[] result = new Object[size()];
+        int index = 0;
+        for (E item : this) {
+          result[index++] = item;
+        }
+        return result;
     }
 
     @Override
     public default <T> T[] toArray(T[] array) {
-        // not implementing at this time
-        return null;
+        int listSize = size();
+        T[] result = array;
+        if (array.length < listSize) {
+          result = java.util.Arrays.copyOf(array, listSize);
+        }
+        int index = 0;
+        for (E item : this) {
+          T value = (T) item;
+          result[index++] = value;
+        }
+        if (result.length > listSize) {
+          result[listSize] = null;
+        }
+        return result;
     }
 
 }
